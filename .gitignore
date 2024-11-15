@@ -1,0 +1,54 @@
+# Node modules
+node_modules/
+
+# Expo files
+.expo/
+.expo-shared/
+
+# Build directories
+build/
+dist/
+ios/build/
+android/build/
+android/app/build/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# macOS files
+.DS_Store
+
+# Expo/React Native config
+.bundle/
+.expo/
+.expo-shared/
+*.jsc
+
+# Watchman files
+.watchmanconfig
+
+# Temporary files
+*.temp
+*.tmp
+
+# VSCode settings
+.vscode/
+
+# IDEs
+.idea/
+
+# Misc
+*.log
+*.lock
+
+# OS Generated Files
+Thumbs.db
+.DS_Store
+
+# Ignoring environmental variables
+.env
+.env.local
+.env.production
+.env.development
