@@ -1,3 +1,5 @@
+import { useEffect, useState } from "react";
+
 const API_URL = "https://mempool.space/api/v1/fees/recommended";
 
 type Fee = {
@@ -6,7 +8,7 @@ type Fee = {
   hourFee: number;
 };
 
-export const getFeeData = async (): Promise<Fee> => {
+const getFeeData = async (): Promise<Fee> => {
   try {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -14,5 +16,10 @@ export const getFeeData = async (): Promise<Fee> => {
     }
     const data = await response.json();
     return data;
-  } catch {}
+  } catch (error) {
+    console.error('Error fetching fee data:', error);
+    throw error;
+  }
 };
+
+export { Fee, getFeeData };
