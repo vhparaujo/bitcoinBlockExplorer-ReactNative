@@ -1,5 +1,3 @@
-import { useEffect, useState } from "react";
-
 const API_URL = "https://mempool.space/api/v1/fees/recommended";
 
 type Fee = {
