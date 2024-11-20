@@ -6,8 +6,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { NavigationContainer, useNavigation } from "@react-navigation/native";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { useNavigation } from "@react-navigation/native";
 import { TabType } from "../../routes/tab";
 import { useFetchData } from "../../../hooks/hooks";
 import { Fee, getFeeData } from "../../../services/FeeRequest";
@@ -16,10 +15,21 @@ import {
   BlockHeader,
   getBlockHeaderData,
 } from "../../../services/BlockHeaderRequest";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import {
+  getTransactionData,
+  TransactionHeader,
+} from "../../../services/TransactionsRequest";
+import { StackTypes } from "../../routes/stack";
+import {
+  Coins,
+  Coins2,
+  getCoins,
+  getCoins2,
+} from "../../../services/CoinsRequest";
 
-const HomeScreen = () => {
-  const tabNavigation = useNavigation<TabType>();
+const Home = () => {
+  const navigation = useNavigation<StackTypes>();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -30,24 +40,55 @@ const HomeScreen = () => {
     refetch: refetchFee,
   } = useFetchData<Fee>(getFeeData);
 
-  const { data, loading, error } =
-    useFetchData<BlockHeader>(getBlockHeaderData);
+  const {
+    data: blockHeaderData,
+    loading: blockHeaderLoading,
+    error: blockHeaderError,
+    refetch: refetchBlockHeader,
+  } = useFetchData<BlockHeader>(getBlockHeaderData);
+
+  const {
+    data: coins,
+    loading: coinsLoading,
+    error: coinsError,
+    refetch: refetchCoins,
+  } = useFetchData<Coins2>(getCoins2);
+
+  const {
+    data: transactionData,
+    loading: transactionLoading,
+    error: transactionError,
+    refetch: refetchTransaction,
+  } = useFetchData<TransactionHeader>(getTransactionData);
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
-    await Promise.all([refetchFee()]); // Chame os métodos de atualização
+    await Promise.all([
+      refetchFee(),
+      refetchBlockHeader(),
+      refetchTransaction(),
+      refetchCoins(),
+    ]); // Chame os métodos de atualização
     setRefreshing(false);
-  }, [refetchFee]);
+  }, [refetchFee, refetchBlockHeader, refetchTransaction, refetchCoins]);
 
-  if (loading) {
+  const navigateToBlockDetails = (hashBlock: string) => {
+    navigation.navigate("EachBlock", { hashBlock });
+  };
+
+  const navigateToTransactionDetails = (txId: string) => {
+    navigation.navigate("EachTransaction", { txId });
+  };
+
+  if (blockHeaderLoading || feeLoading || transactionLoading || coinsLoading) {
     return <LoadingView />;
   }
 
-  if (error) return <View>Error: {error}</View>;
+  if (feeError || blockHeaderError || transactionError || coinsError)
+    return console.log(feeError, blockHeaderError, transactionError);
 
   return (
     <ScrollView
-      contentContainerStyle={styles.container}
       refreshControl={
         <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
       }
@@ -60,10 +101,31 @@ const HomeScreen = () => {
             <Text>High Priority: {fee.fastestFee}</Text>
           </View>
         ))}
-        {data.map((block) => (
+
+        {blockHeaderData.map((block) => (
           <View>
             <Text>Height: {block.height}</Text>
             <Text>{Math.floor(block.extras.medianFee)} sat/vB</Text>
+            <Button
+              title="Ver detalhes do bloco"
+              onPress={() => navigateToBlockDetails(block.id)}
+            />
+          </View>
+        ))}
+
+        {transactionData.map((transaction) => (
+          <View>
+            <Text>{transaction.fee}</Text>
+            <Text>{transaction.txid}</Text>
+            <Button
+              title="Ver detalhes da transação"
+              onPress={() => navigateToTransactionDetails(transaction.txid)}
+            />
+          </View>
+        ))}
+        {coins.map((coin) => (
+          <View>
+            <Text>BRL: {coin.BRL.last}</Text>
           </View>
         ))}
       </View>
@@ -71,7 +133,7 @@ const HomeScreen = () => {
   );
 };
 
-export default HomeScreen;
+export default Home;
 
 const styles = StyleSheet.create({
   container: {

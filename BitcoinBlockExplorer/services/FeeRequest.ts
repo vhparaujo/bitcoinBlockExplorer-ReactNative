@@ -1,10 +1,11 @@
-const API_URL = "https://mempool.space/api/v1/fees/recommended";
 
 type Fee = {
   fastestFee: number;
   halfHourFee: number;
   hourFee: number;
 };
+
+const API_URL = "https://mempool.space/api/v1/fees/recommended";
 
 const getFeeData = async (): Promise<Fee> => {
   try {

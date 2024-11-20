@@ -1,4 +1,4 @@
-type TransactionsBlock = {
+type Transactions = {
   txid: string;
   size: number; // Int32 -> number
   fee: number; // Double -> number
@@ -29,8 +29,8 @@ type Status = {
 }
 
 const getTransactionsBlockData = async (
-  hashBlock: string
-): Promise<TransactionsBlock> => {
+  hashBlock?: string
+): Promise<Transactions> => {
   const API_URL = `https://mempool.space/api/block/${hashBlock}/txs`;
 
   try {
@@ -46,4 +46,4 @@ const getTransactionsBlockData = async (
   }
 };
 
-export { TransactionsBlock, getTransactionsBlockData };
+export { Transactions, getTransactionsBlockData };

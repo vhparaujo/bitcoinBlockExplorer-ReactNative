@@ -1,12 +1,12 @@
 const API_URL = "https://mempool.space/api/mempool/recent";
 
-type Transaction = {
+type TransactionHeader = {
   txid: string;
   fee: number;
   value: number;
 };
 
-const getTransactionData = async (): Promise<Transaction> => {
+const getTransactionData = async (): Promise<TransactionHeader> => {
   try {
     const response = await fetch(API_URL);
     if (!response.ok) {
@@ -20,4 +20,4 @@ const getTransactionData = async (): Promise<Transaction> => {
   }
 };
 
-export { Transaction, getTransactionData };
+export { TransactionHeader, getTransactionData };
