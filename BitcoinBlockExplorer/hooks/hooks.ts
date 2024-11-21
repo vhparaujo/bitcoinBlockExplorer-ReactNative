@@ -1,7 +1,8 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from "react";
 
 export const useFetchData = <T, P = undefined>(
-  fetchData: (params?: P) => Promise<T | T[]>
+  fetchData: (params?: P) => Promise<T | T[]>,
+  autoFetch: boolean = true
 ): {
   data: T[];
   loading: boolean;
@@ -9,11 +10,12 @@ export const useFetchData = <T, P = undefined>(
   refetch: (params?: P) => Promise<void>;
 } => {
   const [data, setData] = useState<T[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   const fetch = useCallback(
     async (params?: P) => {
+      if (!params && fetchData.length > 0) return;
       setLoading(true);
       try {
         const response = await fetchData(params);
@@ -27,7 +29,7 @@ export const useFetchData = <T, P = undefined>(
         setError(null);
       } catch (err) {
         setError((err as Error).message);
-        console.error('Error fetching data:', err);
+        console.error("Error fetching data:", err);
       } finally {
         setLoading(false);
       }
@@ -36,8 +38,10 @@ export const useFetchData = <T, P = undefined>(
   );
 
   useEffect(() => {
-    fetch(); // Executa a função fetch ao montar o componente sem parâmetros iniciais
-  }, [fetch]);
+    if (autoFetch) {
+      fetch();
+    }
+  }, [fetch, autoFetch]);
 
   return { data, loading, error, refetch: fetch };
 };

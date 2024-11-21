@@ -17,7 +17,6 @@ import {
 import { RouteTypes } from "../../routes/stack";
 
 const EachBlock = () => {
-  const [refreshing, setRefreshing] = useState(false);
 
   const route = useRoute<RouteTypes>();
 
@@ -28,7 +27,8 @@ const EachBlock = () => {
   const { hashBlock } = route.params;
 
   const { data, loading, error, refetch } = useFetchData<Transactions, string>(
-    getTransactionsBlockData
+    getTransactionsBlockData,
+    false
   );
 
   useEffect(() => {
@@ -37,7 +37,6 @@ const EachBlock = () => {
     }
   }, [hashBlock]);
 
-  // Executa a busca inicial ao montar o componente
   if (loading) {
     return <LoadingView />;
   }

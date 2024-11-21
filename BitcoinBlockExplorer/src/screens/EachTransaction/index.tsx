@@ -27,7 +27,8 @@ const EachTransaction = () => {
   const { txId } = route.params;
 
   const { data, loading, error, refetch } = useFetchData<Transactions, string>(
-    getTransactions
+    getTransactions,
+    false
   );
 
   useEffect(() => {

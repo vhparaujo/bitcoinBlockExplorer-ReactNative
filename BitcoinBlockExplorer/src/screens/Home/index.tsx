@@ -52,7 +52,7 @@ const Home = () => {
     loading: coinsLoading,
     error: coinsError,
     refetch: refetchCoins,
-  } = useFetchData<Coins2>(getCoins2);
+  } = useFetchData<Coins>(getCoins);
 
   const {
     data: transactionData,
@@ -68,7 +68,7 @@ const Home = () => {
       refetchBlockHeader(),
       refetchTransaction(),
       refetchCoins(),
-    ]); // Chame os métodos de atualização
+    ]); 
     setRefreshing(false);
   }, [refetchFee, refetchBlockHeader, refetchTransaction, refetchCoins]);
 
@@ -125,7 +125,7 @@ const Home = () => {
         ))}
         {coins.map((coin) => (
           <View>
-            <Text>BRL: {coin.BRL.last}</Text>
+            <Text>BRL: {coin.USD}</Text>
           </View>
         ))}
       </View>
