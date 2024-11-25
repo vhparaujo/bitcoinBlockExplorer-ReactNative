@@ -15,7 +15,9 @@ type StackNavigation = {
   EachTransaction: { txId: string };
 };
 
-export type RouteTypes = RouteProp<StackNavigation, "EachBlock"> | RouteProp<StackNavigation, "EachTransaction">;
+export type RouteTypes =
+  | RouteProp<StackNavigation, "EachBlock">
+  | RouteProp<StackNavigation, "EachTransaction">;
 
 export type StackTypes = NativeStackNavigationProp<StackNavigation>;
 
@@ -23,7 +25,11 @@ export default function StackComponent() {
   return (
     <NavigationContainer>
       <Stack.Navigator>
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          options={{ headerShown: false }}
+          name="Home"
+          component={Home}
+        />
         <Stack.Screen name="EachBlock" component={EachBlock} />
         <Stack.Screen name="EachTransaction" component={EachTransaction} />
       </Stack.Navigator>

@@ -76,7 +76,7 @@ const Home = () => {
       refetchBlockHeader(),
       refetchTransaction(),
       refetchCoins(),
-    ]); 
+    ]);
     setRefreshing(false);
   }, [refetchFee, refetchBlockHeader, refetchTransaction, refetchCoins]);
 
@@ -95,51 +95,6 @@ const Home = () => {
   if (feeError || blockHeaderError || transactionError || coinsError)
     return console.log(feeError, blockHeaderError, transactionError);
 
-  // return (
-  //   <ScrollView
-  //     refreshControl={
-  //       <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-  //     }
-  //   >
-  //     <View style={styles.container}>
-  //       {feeData.map((fee) => (
-  //         <View>
-  //           <Text>Low Priority: {fee.hourFee}</Text>
-  //           <Text>Medium Priority: {fee.halfHourFee}</Text>
-  //           <Text>High Priority: {fee.fastestFee}</Text>
-  //         </View>
-  //       ))}
-
-  //       {blockHeaderData.map((block) => (
-  //         <View>
-  //           <Text>Height: {block.height}</Text>
-  //           <Text>{Math.floor(block.extras.medianFee)} sat/vB</Text>
-  //           <Button
-  //             title="Ver detalhes do bloco"
-  //             onPress={() => navigateToBlockDetails(block.id)}
-  //           />
-  //         </View>
-  //       ))}
-
-  //       {transactionData.map((transaction) => (
-  //         <View>
-  //           <Text>{transaction.fee}</Text>
-  //           <Text>{transaction.txid}</Text>
-  //           <Button
-  //             title="Ver detalhes da transação"
-  //             onPress={() => navigateToTransactionDetails(transaction.txid)}
-  //           />
-  //         </View>
-  //       ))}
-  //       {coins.map((coin) => (
-  //         <View>
-  //           <Text>BRL: {coin.USD}</Text>
-  //         </View>
-  //       ))}
-  //     </View>
-  //   </ScrollView>
-  // );
-
   return (
     <SafeAreaView style={styles.container}>
       {!isFocused ? (
@@ -147,14 +102,14 @@ const Home = () => {
           <Text style={styles.title}>Bitcoin Explorer</Text>
           <Image
             style={styles.image}
-            source={require('../../../assets/bitcoin.png')}
+            source={require("../../../assets/bitcoin.png")}
           ></Image>
         </View>
       ) : null}
-      <Animated.View style={styles.searchHorizontalContainer}>
+      <View style={styles.searchHorizontalContainer}>
         <View style={styles.searchBar}>
           <Image
-            source={require('../../../assets/search.png')}
+            source={require("../../../assets/search.png")}
             style={styles.searchImage}
           ></Image>
           <TextInput
@@ -171,11 +126,17 @@ const Home = () => {
                 Keyboard.dismiss();
                 setIsFocused(false);
               }}
-            ><Text style={{color: 'blue',marginRight: 20}}>Cancel</Text></Pressable>
+            >
+              <Text style={{ color: "blue", marginRight: 20 }}>Cancel</Text>
+            </Pressable>
           </TouchableOpacity>
         ) : null}
-      </Animated.View>
-      <ScrollView>
+      </View>
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
+      >
         <View
           style={{
             alignItems: "center",
@@ -183,18 +144,24 @@ const Home = () => {
         >
           <Text style={{ paddingBottom: 10 }}>Preço do Bitcoin</Text>
 
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              alignItems: "center",
-              width: "100%",
-              marginBottom: 20,
-            }}
-          >
-            <Text style={{ fontSize: 30, fontWeight: "bold" }}>R$ 200.000</Text>
-            <Text style={{ marginLeft: 5, fontSize: 15, color: "green" }}>+2,5%</Text>
-          </View>
+          {coins.map((coin) => (
+            <View
+              style={{
+                flexDirection: "row",
+                justifyContent: "center",
+                alignItems: "center",
+                width: "100%",
+                marginBottom: 20,
+              }}
+            >
+              <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+                $ {coin.USD}
+              </Text>
+              <Text style={{ marginLeft: 5, fontSize: 15, color: "green" }}>
+                +2,5%
+              </Text>
+            </View>
+          ))}
 
           <Text style={{ paddingBottom: 10 }}>Taxa de Transação</Text>
           <View style={styles.horizontalPriorityContainer}>
@@ -202,49 +169,50 @@ const Home = () => {
             <Text style={{ paddingRight: 10 }}>Média Prioridade</Text>
             <Text>Alta Prioridade</Text>
           </View>
-          <View
-            style={{
-              marginTop: 20,
-              width: "90%",
-              justifyContent: "space-between",
-              flexDirection: "row",
-            }}
-          >
+          {feeData.map((fee) => (
             <View
               style={{
-                alignItems: "center",
-                padding: 10,
-                backgroundColor: "#f0f0f0",
-                borderRadius: 10,
+                marginTop: 20,
+                width: "90%",
+                justifyContent: "space-between",
+                flexDirection: "row",
               }}
             >
-              <Text>40 sat/vB</Text>
-              <Text>R$5,00</Text>
+              <View
+                style={{
+                  alignItems: "center",
+                  padding: 10,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: 10,
+                }}
+              >
+                <Text>{fee.hourFee} sat/vB</Text>
+                <Text>R$5,00</Text>
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  padding: 10,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: 10,
+                }}
+              >
+                <Text>{fee.halfHourFee} sat/vB</Text>
+                <Text>R$5,00</Text>
+              </View>
+              <View
+                style={{
+                  alignItems: "center",
+                  padding: 10,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: 10,
+                }}
+              >
+                <Text>{fee.fastestFee} sat/vB</Text>
+                <Text>R$5,00</Text>
+              </View>
             </View>
-            <View
-              style={{
-                alignItems: "center",
-                padding: 10,
-                backgroundColor: "#f0f0f0",
-                borderRadius: 10,
-              }}
-            >
-              <Text>40 sat/vB</Text>
-              <Text>R$5,00</Text>
-            </View>
-            <View
-              style={{
-                alignItems: "center",
-                padding: 10,
-                backgroundColor: "#f0f0f0",
-                borderRadius: 10,
-              }}
-            >
-              <Text>40 sat/vB</Text>
-              <Text>R$5,00</Text>
-            </View>
-          </View>
-
+          ))}
           <View
             style={{
               alignItems: "flex-start",
@@ -296,37 +264,53 @@ const Home = () => {
             >
               Transações
             </Text>
-            <View
-              style={{
-                width: "90%",
-                padding: 20,
-                backgroundColor: "#f0f0f0",
-                borderRadius: 10,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>ID transação</Text>
-                <Text>Valor</Text>
-                <Text>Taxa</Text>
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                }}
-              >
-                <Text>641e1452f037f0fa15</Text>
-                <Text>0,02349346 BTC</Text>
-                <Text>53,3 sat</Text>
-              </View>
-            </View>
+            
+            {transactionData.map((transaction) => (
+          <View
+          style={{
+            width: '90%',
+            padding: 20,
+            backgroundColor: "#f0f0f0",
+            borderRadius: 10,
+            marginBottom: 15,
+          }}
+        >
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text>ID transação</Text>
+            <Text>Valor</Text>
+            <Text>Taxa</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+            }}
+          >
+            <Text numberOfLines={1} style={{width: '33%'}}>{transaction.txid}</Text>
+            <Text>{transaction.value}</Text>
+            <Text>{transaction.fee} sat</Text>
           </View>
         </View>
+        ))}
+
+          </View>
+        </View>
+
+        {blockHeaderData.map((block) => (
+          <View>
+            <Text>Height: {block.height}</Text>
+            <Text>{Math.floor(block.extras.medianFee)} sat/vB</Text>
+            <Button
+              title="Ver detalhes do bloco"
+              onPress={() => navigateToBlockDetails(block.id)}
+            />
+          </View>
+        ))}
       </ScrollView>
     </SafeAreaView>
   );
