@@ -142,6 +142,7 @@ const Home = () => {
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
+        style={{ width: "100%" }}
       >
         <View
           style={{
@@ -279,7 +280,8 @@ const Home = () => {
             </Text>
 
             {transactionData.map((transaction) => (
-              <View
+              <TouchableOpacity
+              onPress={() => navigateToTransactionDetails(transaction.txid)}
                 style={{
                   width: "90%",
                   padding: 20,
@@ -310,7 +312,7 @@ const Home = () => {
                   <Text>{(transaction.value) / satoshi} BTC</Text>
                   <Text>{transaction.fee} sat</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </View>
@@ -383,7 +385,6 @@ const styles = StyleSheet.create({
   },
   gridContainer: {
     marginHorizontal: "auto",
-    width: 400,
     flexDirection: "row",
     flexWrap: "wrap",
     alignItems: "center",
