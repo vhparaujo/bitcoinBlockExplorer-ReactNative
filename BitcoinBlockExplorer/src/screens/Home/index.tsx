@@ -35,6 +35,8 @@ import {
   getCoins2,
 } from "../../../services/CoinsRequest";
 
+const satoshi = 100000000;
+
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
 
@@ -94,6 +96,10 @@ const Home = () => {
 
   if (feeError || blockHeaderError || transactionError || coinsError)
     return console.log(feeError, blockHeaderError, transactionError);
+
+  const calculateValuePerSatvB = (value: number) => {
+    return (value * 140) / 100000000;
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -187,7 +193,14 @@ const Home = () => {
                 }}
               >
                 <Text>{fee.hourFee} sat/vB</Text>
-                <Text>R$5,00</Text>
+                {coins.map((coins) => (
+                  <Text>
+                    $
+                    {(calculateValuePerSatvB(fee.hourFee) * coins.USD).toFixed(
+                      2
+                    )}
+                  </Text>
+                ))}
               </View>
               <View
                 style={{
@@ -198,7 +211,14 @@ const Home = () => {
                 }}
               >
                 <Text>{fee.halfHourFee} sat/vB</Text>
-                <Text>R$5,00</Text>
+                {coins.map((coins) => (
+                  <Text>
+                    $
+                    {(
+                      calculateValuePerSatvB(fee.halfHourFee) * coins.USD
+                    ).toFixed(2)}
+                  </Text>
+                ))}
               </View>
               <View
                 style={{
@@ -209,7 +229,14 @@ const Home = () => {
                 }}
               >
                 <Text>{fee.fastestFee} sat/vB</Text>
-                <Text>R$5,00</Text>
+                {coins.map((coins) => (
+                  <Text>
+                    $
+                    {(
+                      calculateValuePerSatvB(fee.fastestFee) * coins.USD
+                    ).toFixed(2)}
+                  </Text>
+                ))}
               </View>
             </View>
           ))}
@@ -221,37 +248,23 @@ const Home = () => {
             }}
           >
             <Text style={{ paddingLeft: 20, marginTop: 20 }}>Blocos</Text>
+
             <View style={styles.gridContainer}>
-              <View style={styles.gridItem}>
-                <Text>789543</Text>
-                <Text>56 sat/vB</Text>
-                <Text>1,33 MB</Text>
-                <Text>1340 transações</Text>
-                <Text>12 minutos atrás</Text>
-              </View>
-              <View style={styles.gridItem}>
-                <Text>789543</Text>
-                <Text>56 sat/vB</Text>
-                <Text>1,33 MB</Text>
-                <Text>1340 transações</Text>
-                <Text>12 minutos atrás</Text>
-              </View>
-              <View style={styles.gridItem}>
-                <Text>789543</Text>
-                <Text>56 sat/vB</Text>
-                <Text>1,33 MB</Text>
-                <Text>1340 transações</Text>
-                <Text>12 minutos atrás</Text>
-              </View>
-              <View style={styles.gridItem}>
-                <Text>789543</Text>
-                <Text>56 sat/vB</Text>
-                <Text>1,33 MB</Text>
-                <Text>1340 transações</Text>
-                <Text>12 minutos atrás</Text>
-              </View>
+              {blockHeaderData.slice(0,4).map((block) => (
+                <TouchableOpacity
+                  style={styles.gridItem}
+                  onPress={() => navigateToBlockDetails(block.id)}
+                >
+                  <Text>{block.height}</Text>
+                  <Text>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
+                  <Text>{(block.size / 1000000).toFixed(2)} MB</Text>
+                  <Text>{block.tx_count} transactions</Text>
+                  <Text>{block.timestamp}</Text>
+                </TouchableOpacity>
+              ))}
             </View>
           </View>
+
           <View
             style={{
               alignItems: "center",
@@ -264,53 +277,43 @@ const Home = () => {
             >
               Transações
             </Text>
-            
+
             {transactionData.map((transaction) => (
-          <View
-          style={{
-            width: '90%',
-            padding: 20,
-            backgroundColor: "#f0f0f0",
-            borderRadius: 10,
-            marginBottom: 15,
-          }}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text>ID transação</Text>
-            <Text>Valor</Text>
-            <Text>Taxa</Text>
-          </View>
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text numberOfLines={1} style={{width: '33%'}}>{transaction.txid}</Text>
-            <Text>{transaction.value}</Text>
-            <Text>{transaction.fee} sat</Text>
+              <View
+                style={{
+                  width: "90%",
+                  padding: 20,
+                  backgroundColor: "#f0f0f0",
+                  borderRadius: 10,
+                  marginBottom: 15,
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text>ID transação</Text>
+                  <Text>Valor</Text>
+                  <Text>Taxa</Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  <Text numberOfLines={1} style={{ width: "33%" }}>
+                    {transaction.txid}
+                  </Text>
+                  <Text>{(transaction.value) / satoshi} BTC</Text>
+                  <Text>{transaction.fee} sat</Text>
+                </View>
+              </View>
+            ))}
           </View>
         </View>
-        ))}
-
-          </View>
-        </View>
-
-        {blockHeaderData.map((block) => (
-          <View>
-            <Text>Height: {block.height}</Text>
-            <Text>{Math.floor(block.extras.medianFee)} sat/vB</Text>
-            <Button
-              title="Ver detalhes do bloco"
-              onPress={() => navigateToBlockDetails(block.id)}
-            />
-          </View>
-        ))}
       </ScrollView>
     </SafeAreaView>
   );
