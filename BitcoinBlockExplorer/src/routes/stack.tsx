@@ -11,7 +11,7 @@ const Stack = createNativeStackNavigator();
 
 type StackNavigation = {
   Home: undefined;
-  EachBlock: { hashBlock: string };
+  EachBlock: { hashBlock: string, height: number, date: number, size: number, medianFee: number, miner: string, numberTransactions: number };
   EachTransaction: { txId: string };
 };
 

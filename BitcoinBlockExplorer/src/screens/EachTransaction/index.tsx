@@ -16,6 +16,7 @@ import {
 } from "../../../services/TransactionsBlockRequest";
 import { RouteTypes } from "../../routes/stack";
 import { getTransactions } from "../../../services/EachTransactionRequest";
+import { randomNumber } from "../../components/Generals";
 
 const EachTransaction = () => {
   const route = useRoute<RouteTypes>();
@@ -51,9 +52,35 @@ const EachTransaction = () => {
     <ScrollView>
       <View style={styles.container}>
         {data.map((transaction) => (
-          <View>
-            <Text>Size: {transaction.txid}</Text>
-            <Text>fee: {transaction.fee}</Text>
+          <View key={transaction.txid}>
+            <Text>Transaction: {transaction.txid}</Text>
+            <Text>Date: {transaction.status.block_time}</Text>
+            <Text>Size: {transaction.size}</Text>
+            <Text>Fee: {transaction.fee}</Text>
+
+            {/* entradas, lado esquerdo antes da seta no app oficial */}
+            {transaction.vin.map((vin) => (
+              <View key={randomNumber()}>
+                <Text style={{ color: "blue" }}>
+                  {vin.prevout?.scriptpubkey_address}
+                </Text>
+                <Text style={{ color: "red" }}>
+                  {(vin.prevout?.value ?? 0) / 100000000}
+                </Text>
+              </View>
+            ))}
+
+            {/* saidas, lado direito depois da seta no app oficial */}
+            {transaction.vout.map((vout) => (
+              <View key={randomNumber()}>
+                <Text style={{ color: "green" }}>
+                  {vout.scriptpubkey_address}
+                </Text>
+                <Text style={{ color: "orange" }}>
+                  {(vout.value ?? 0) / 100000000}
+                </Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>

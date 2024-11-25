@@ -15,16 +15,24 @@ import {
   Transactions,
 } from "../../../services/TransactionsBlockRequest";
 import { RouteTypes } from "../../routes/stack";
+import { randomNumber } from "../../components/Generals";
 
 const EachBlock = () => {
-
   const route = useRoute<RouteTypes>();
 
   if (route.name !== "EachBlock") {
     return null;
   }
-  
-  const { hashBlock } = route.params;
+
+  const {
+    hashBlock,
+    height,
+    date,
+    size,
+    medianFee,
+    miner,
+    numberTransactions,
+  } = route.params;
 
   const { data, loading, error, refetch } = useFetchData<Transactions, string>(
     getTransactionsBlockData,
@@ -49,10 +57,45 @@ const EachBlock = () => {
   return (
     <ScrollView>
       <View style={styles.container}>
+        <Text>Block: {height}</Text>
+        <Text>Hash: {hashBlock}</Text>
+        <Text>Date: {date}</Text>
+        <Text>Size: {size}</Text>
+        <Text>Median Fee: {medianFee}</Text>
+        <Text>Miner: {miner}</Text>
+
+        <Text>{numberTransactions} transactions</Text>
+
         {data.map((transactionsBlock) => (
-          <View>
-            <Text>Size: {transactionsBlock.txid}</Text>
-            <Text>fee: {transactionsBlock.fee}</Text>
+          <View key={randomNumber()}>
+            <Text numberOfLines={1} style={{ width: 300 }}>
+              {transactionsBlock.txid}
+            </Text>
+            <Text>Date: {transactionsBlock.status.block_time}</Text>
+
+            {/* transacoes de entrada, lado esquerdo antes da seta no app oficial */}
+            {transactionsBlock.vin.map((vin) => (
+              <View key={randomNumber()}>
+                <Text style={{ color: "blue" }}>
+                  {vin.prevout?.scriptpubkey_address}
+                </Text>
+                <Text style={{ color: "red" }}>
+                  {(vin.prevout?.value ?? 0) / 100000000}
+                </Text>
+              </View>
+            ))}
+
+            {/* transacoes de saida, lado direito depois da seta no app oficial */}
+            {transactionsBlock.vout.map((vout) => (
+              <View key={randomNumber()}>
+                <Text style={{ color: "green" }}>
+                  {vout.scriptpubkey_address}
+                </Text>
+                <Text style={{ color: "orange" }}>
+                  {(vout.value ?? 0) / 100000000}
+                </Text>
+              </View>
+            ))}
           </View>
         ))}
       </View>

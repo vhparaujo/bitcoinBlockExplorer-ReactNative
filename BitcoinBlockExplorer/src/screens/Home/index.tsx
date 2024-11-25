@@ -5,7 +5,6 @@ import {
   StyleSheet,
   Text,
   View,
-  SafeAreaView,
   Pressable,
   TextInput,
   Image,
@@ -14,6 +13,7 @@ import {
   Keyboard,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { TabType } from "../../routes/tab";
 import { useFetchData } from "../../../hooks/hooks";
 import { Fee, getFeeData } from "../../../services/FeeRequest";
@@ -34,8 +34,10 @@ import {
   getCoins,
   getCoins2,
 } from "../../../services/CoinsRequest";
-
-const satoshi = 100000000;
+import {
+  calculateValuePerSatvB,
+  randomNumber,
+} from "../../components/Generals";
 
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
@@ -82,8 +84,24 @@ const Home = () => {
     setRefreshing(false);
   }, [refetchFee, refetchBlockHeader, refetchTransaction, refetchCoins]);
 
-  const navigateToBlockDetails = (hashBlock: string) => {
-    navigation.navigate("EachBlock", { hashBlock });
+  const navigateToBlockDetails = (
+    hashBlock: string,
+    height: number,
+    date: number,
+    size: number,
+    medianFee: number,
+    miner: string,
+    numberTransactions: number
+  ) => {
+    navigation.navigate("EachBlock", {
+      hashBlock,
+      height,
+      date,
+      size,
+      medianFee,
+      miner,
+      numberTransactions,
+    });
   };
 
   const navigateToTransactionDetails = (txId: string) => {
@@ -96,10 +114,6 @@ const Home = () => {
 
   if (feeError || blockHeaderError || transactionError || coinsError)
     return console.log(feeError, blockHeaderError, transactionError);
-
-  const calculateValuePerSatvB = (value: number) => {
-    return (value * 140) / 100000000;
-  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -160,6 +174,7 @@ const Home = () => {
                 width: "100%",
                 marginBottom: 20,
               }}
+              key={coin.USD}
             >
               <Text style={{ fontSize: 30, fontWeight: "bold" }}>
                 $ {coin.USD}
@@ -172,9 +187,13 @@ const Home = () => {
 
           <Text style={{ paddingBottom: 10 }}>Taxa de Transação</Text>
           <View style={styles.horizontalPriorityContainer}>
-            <Text style={{ paddingRight: 10 }}>Baixa Prioridade</Text>
-            <Text style={{ paddingRight: 10 }}>Média Prioridade</Text>
-            <Text>Alta Prioridade</Text>
+            <Text style={{ paddingRight: 10, fontSize: 11 }}>
+              Baixa Prioridade
+            </Text>
+            <Text style={{ paddingRight: 10, fontSize: 11 }}>
+              Média Prioridade
+            </Text>
+            <Text style={{ fontSize: 11 }}>Alta Prioridade</Text>
           </View>
           {feeData.map((fee) => (
             <View
@@ -184,6 +203,7 @@ const Home = () => {
                 justifyContent: "space-between",
                 flexDirection: "row",
               }}
+              key={randomNumber()}
             >
               <View
                 style={{
@@ -195,7 +215,7 @@ const Home = () => {
               >
                 <Text>{fee.hourFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text>
+                  <Text key={randomNumber()}>
                     $
                     {(calculateValuePerSatvB(fee.hourFee) * coins.USD).toFixed(
                       2
@@ -213,7 +233,7 @@ const Home = () => {
               >
                 <Text>{fee.halfHourFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text>
+                  <Text key={randomNumber()}>
                     $
                     {(
                       calculateValuePerSatvB(fee.halfHourFee) * coins.USD
@@ -231,7 +251,7 @@ const Home = () => {
               >
                 <Text>{fee.fastestFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text>
+                  <Text key={randomNumber()}>
                     $
                     {(
                       calculateValuePerSatvB(fee.fastestFee) * coins.USD
@@ -251,10 +271,21 @@ const Home = () => {
             <Text style={{ paddingLeft: 20, marginTop: 20 }}>Blocos</Text>
 
             <View style={styles.gridContainer}>
-              {blockHeaderData.slice(0,4).map((block) => (
+              {blockHeaderData.slice(0, 4).map((block) => (
                 <TouchableOpacity
                   style={styles.gridItem}
-                  onPress={() => navigateToBlockDetails(block.id)}
+                  onPress={() =>
+                    navigateToBlockDetails(
+                      block.id,
+                      block.height,
+                      block.timestamp,
+                      block.size,
+                      block.extras.medianFee,
+                      block.extras.pool.name,
+                      block.tx_count
+                    )
+                  }
+                  key={randomNumber()}
                 >
                   <Text>{block.height}</Text>
                   <Text>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
@@ -281,7 +312,7 @@ const Home = () => {
 
             {transactionData.map((transaction) => (
               <TouchableOpacity
-              onPress={() => navigateToTransactionDetails(transaction.txid)}
+                onPress={() => navigateToTransactionDetails(transaction.txid)}
                 style={{
                   width: "90%",
                   padding: 20,
@@ -289,6 +320,7 @@ const Home = () => {
                   borderRadius: 10,
                   marginBottom: 15,
                 }}
+                key={randomNumber()}
               >
                 <View
                   style={{
@@ -309,7 +341,7 @@ const Home = () => {
                   <Text numberOfLines={1} style={{ width: "33%" }}>
                     {transaction.txid}
                   </Text>
-                  <Text>{(transaction.value) / satoshi} BTC</Text>
+                  <Text>{transaction.value / 100000000} BTC</Text>
                   <Text>{transaction.fee} sat</Text>
                 </View>
               </TouchableOpacity>
@@ -349,7 +381,6 @@ const styles = StyleSheet.create({
   },
   horizontalContainer: {
     flexDirection: "row",
-    // justifyContent: 'center',
     alignItems: "center",
     width: "100%",
     paddingHorizontal: 20,
@@ -362,6 +393,7 @@ const styles = StyleSheet.create({
     padding: 20,
     backgroundColor: "#f0f0f0",
     borderRadius: 10,
+    width: "90%",
   },
   image: {
     position: "absolute",
