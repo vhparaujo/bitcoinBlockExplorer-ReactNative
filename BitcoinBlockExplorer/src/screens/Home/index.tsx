@@ -149,6 +149,7 @@ const Home = () => {
               navigateToTransactionDetails(event.nativeEvent.text)
             }
             placeholderTextColor={Colors.cinza}
+            
           ></TextInput>
         </View>
         {isFocused ? (
@@ -159,7 +160,7 @@ const Home = () => {
                 setIsFocused(false);
               }}
             >
-              <Text style={{ color: "blue", marginRight: 20 }}>Cancel</Text>
+              <Text style={{ color: Colors.laranja, marginRight: 20 }}>Cancel</Text>
             </Pressable>
           </TouchableOpacity>
         ) : null}
@@ -384,7 +385,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
   },
   searchBar: {
-    backgroundColor: "#f0f0f0",
+    backgroundColor: Colors.backgroundBoxes,
     flexDirection: "row",
     alignItems: "center",
     height: 40,

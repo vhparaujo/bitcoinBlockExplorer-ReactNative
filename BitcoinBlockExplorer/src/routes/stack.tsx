@@ -49,6 +49,10 @@ export default function StackComponent() {
             headerStyle: {
               backgroundColor: Colors.background,
             },
+             headerTitleStyle: {
+              fontSize: 20,
+              color: Colors.cinza,
+             },
           }}
           name="EachBlock"
           component={EachBlock}
@@ -58,6 +62,10 @@ export default function StackComponent() {
             headerStyle: {
               backgroundColor: Colors.background,
             },
+            headerTitleStyle: {
+              fontSize: 20,
+              color: Colors.cinza,
+             },
           }}
           name="EachTransaction"
           component={EachTransaction}
