@@ -45,6 +45,8 @@ const Home = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
 
+  const [inputValue, setInputValue] = useState("");
+
   const {
     data: feeData,
     loading: feeLoading,
@@ -106,6 +108,7 @@ const Home = () => {
 
   const navigateToTransactionDetails = (txId: string) => {
     navigation.navigate("EachTransaction", { txId });
+    setInputValue("");
   };
 
   if (blockHeaderLoading || feeLoading || transactionLoading || coinsLoading) {
@@ -134,9 +137,14 @@ const Home = () => {
           ></Image>
           <TextInput
             style={{ marginLeft: 25 }}
-            placeholder="Search..."
+            placeholder="Search for transactions"
+            value={inputValue}
             onFocus={() => setIsFocused(true)}
             onBlur={() => setIsFocused(false)}
+            onChangeText={setInputValue}
+            onSubmitEditing={(event) =>
+              navigateToTransactionDetails(event.nativeEvent.text)
+            }
           ></TextInput>
         </View>
         {isFocused ? (
