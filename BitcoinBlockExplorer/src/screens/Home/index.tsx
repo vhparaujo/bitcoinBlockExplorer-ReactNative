@@ -38,6 +38,7 @@ import {
   calculateValuePerSatvB,
   randomNumber,
 } from "../../components/Generals";
+import Colors from "../../components/Colors";
 
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
@@ -122,7 +123,7 @@ const Home = () => {
     <SafeAreaView style={styles.container}>
       {!isFocused ? (
         <View style={styles.horizontalContainer}>
-          <Text style={styles.title}>Bitcoin Explorer</Text>
+          <Text style={styles.title}>Bitcoin Block Explorer</Text>
           <Image
             style={styles.image}
             source={require("../../../assets/bitcoin.png")}
@@ -145,6 +146,7 @@ const Home = () => {
             onSubmitEditing={(event) =>
               navigateToTransactionDetails(event.nativeEvent.text)
             }
+            placeholderTextColor={Colors.cinza}
           ></TextInput>
         </View>
         {isFocused ? (
@@ -171,7 +173,7 @@ const Home = () => {
             alignItems: "center",
           }}
         >
-          <Text style={{ paddingBottom: 10 }}>Preço do Bitcoin</Text>
+          <Text style={{ paddingBottom: 10, color: Colors.cinza, fontSize: 18 }}>Preço do Bitcoin</Text>
 
           {coins.map((coin) => (
             <View
@@ -184,24 +186,21 @@ const Home = () => {
               }}
               key={coin.USD}
             >
-              <Text style={{ fontSize: 30, fontWeight: "bold" }}>
+              <Text style={{ fontSize: 24, fontWeight: "bold", color: Colors.laranja }}>
                 $ {coin.USD}
-              </Text>
-              <Text style={{ marginLeft: 5, fontSize: 15, color: "green" }}>
-                +2,5%
               </Text>
             </View>
           ))}
 
-          <Text style={{ paddingBottom: 10 }}>Taxa de Transação</Text>
+          <Text style={{ paddingBottom: 10, color: Colors.cinza }}>Taxa de Transação</Text>
           <View style={styles.horizontalPriorityContainer}>
-            <Text style={{ paddingRight: 10, fontSize: 11 }}>
+            <Text style={{ paddingRight: 10, fontSize: 11, color: Colors.cinza }}>
               Baixa Prioridade
             </Text>
-            <Text style={{ paddingRight: 10, fontSize: 11 }}>
+            <Text style={{ paddingRight: 10, fontSize: 11, color: Colors.cinza }}>
               Média Prioridade
             </Text>
-            <Text style={{ fontSize: 11 }}>Alta Prioridade</Text>
+            <Text style={{ fontSize: 11, color: Colors.cinza }}>Alta Prioridade</Text>
           </View>
           {feeData.map((fee) => (
             <View
@@ -217,13 +216,15 @@ const Home = () => {
                 style={{
                   alignItems: "center",
                   padding: 10,
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: Colors.backgroundBoxes,
                   borderRadius: 10,
                 }}
               >
-                <Text>{fee.hourFee} sat/vB</Text>
+                <Text style={{ color: Colors.cinza }}>{fee.hourFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text key={randomNumber()}>
+                  <Text key={randomNumber()}
+                    style={{ color: Colors.laranja }}
+                  >
                     $
                     {(calculateValuePerSatvB(fee.hourFee) * coins.USD).toFixed(
                       2
@@ -235,13 +236,15 @@ const Home = () => {
                 style={{
                   alignItems: "center",
                   padding: 10,
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: Colors.backgroundBoxes,
                   borderRadius: 10,
                 }}
               >
-                <Text>{fee.halfHourFee} sat/vB</Text>
+                <Text style={{ color: Colors.cinza }}>{fee.halfHourFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text key={randomNumber()}>
+                  <Text key={randomNumber()}
+                    style={{ color: Colors.laranja }}
+                  >
                     $
                     {(
                       calculateValuePerSatvB(fee.halfHourFee) * coins.USD
@@ -253,13 +256,15 @@ const Home = () => {
                 style={{
                   alignItems: "center",
                   padding: 10,
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: Colors.backgroundBoxes,
                   borderRadius: 10,
                 }}
               >
-                <Text>{fee.fastestFee} sat/vB</Text>
+                <Text style={{ color: Colors.cinza }}>{fee.fastestFee} sat/vB</Text>
                 {coins.map((coins) => (
-                  <Text key={randomNumber()}>
+                  <Text key={randomNumber()}
+                    style={{ color: Colors.laranja }}
+                  >
                     $
                     {(
                       calculateValuePerSatvB(fee.fastestFee) * coins.USD
@@ -276,7 +281,7 @@ const Home = () => {
               width: `100%`,
             }}
           >
-            <Text style={{ paddingLeft: 20, marginTop: 20 }}>Blocos</Text>
+            <Text style={{ paddingLeft: 20, marginTop: 20, color: Colors.cinza, fontSize: 18 }}>Blocos</Text>
 
             <View style={styles.gridContainer}>
               {blockHeaderData.slice(0, 4).map((block) => (
@@ -295,11 +300,11 @@ const Home = () => {
                   }
                   key={randomNumber()}
                 >
-                  <Text>{block.height}</Text>
-                  <Text>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
-                  <Text>{(block.size / 1000000).toFixed(2)} MB</Text>
-                  <Text>{block.tx_count} transactions</Text>
-                  <Text>{block.timestamp}</Text>
+                  <Text style={{ fontSize: 17, color: Colors.laranja }}>{block.height}</Text>
+                  <Text style={{ fontSize: 13, color: Colors.cinza }}>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
+                  <Text style={{ fontSize: 13, color: Colors.cinza }}>{(block.size / 1000000).toFixed(2)} MB</Text>
+                  <Text style={{ fontSize: 13, color: Colors.cinza }}>{block.tx_count} transactions</Text>
+                  <Text style={{ fontSize: 13, color: Colors.cinza }}>{block.timestamp}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -313,7 +318,7 @@ const Home = () => {
             }}
           >
             <Text
-              style={{ width: "100%", paddingLeft: 20, marginVertical: 20 }}
+              style={{ width: "100%", paddingLeft: 20, marginVertical: 20, color: Colors.cinza, fontSize: 18 }}
             >
               Transações
             </Text>
@@ -324,7 +329,7 @@ const Home = () => {
                 style={{
                   width: "90%",
                   padding: 20,
-                  backgroundColor: "#f0f0f0",
+                  backgroundColor: Colors.backgroundBoxes,
                   borderRadius: 10,
                   marginBottom: 15,
                 }}
@@ -336,9 +341,9 @@ const Home = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text>ID transação</Text>
-                  <Text>Valor</Text>
-                  <Text>Taxa</Text>
+                  <Text style={{ color: Colors.cinza }}>ID transação</Text>
+                  <Text style={{ color: Colors.cinza }}>Valor</Text>
+                  <Text style={{ color: Colors.cinza }}>Taxa</Text>
                 </View>
                 <View
                   style={{
@@ -346,11 +351,11 @@ const Home = () => {
                     justifyContent: "space-between",
                   }}
                 >
-                  <Text numberOfLines={1} style={{ width: "33%" }}>
+                  <Text numberOfLines={1} style={{ width: "33%", color: Colors.laranja }}>
                     {transaction.txid}
                   </Text>
-                  <Text>{transaction.value / 100000000} BTC</Text>
-                  <Text>{transaction.fee} sat</Text>
+                  <Text style={{ color: Colors.cinza }}>{transaction.value / 100000000} BTC</Text>
+                  <Text style={{ color: Colors.cinza }}>{transaction.fee} sat</Text>
                 </View>
               </TouchableOpacity>
             ))}
@@ -366,7 +371,7 @@ export default Home;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     alignItems: "center",
     justifyContent: "flex-start",
   },
@@ -399,7 +404,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
-    backgroundColor: "#f0f0f0",
+    backgroundColor: Colors.backgroundBoxes,
     borderRadius: 10,
     width: "90%",
   },
@@ -422,6 +427,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     fontSize: 20,
     fontWeight: "bold",
+    color: Colors.laranja,
   },
   gridContainer: {
     marginHorizontal: "auto",
@@ -437,11 +443,10 @@ const styles = StyleSheet.create({
     maxWidth: "45%",
     justifyContent: "center",
     alignItems: "center",
-
     padding: 10,
-    backgroundColor: "rgba(50, 50, 50, 0.25)",
+    backgroundColor: Colors.backgroundBoxes,
     borderWidth: 1.5,
-    borderColor: "#fff",
+    borderColor: Colors.backgroundBoxes,
     borderRadius: 10,
     marginHorizontal: 5,
     marginVertical: 7,

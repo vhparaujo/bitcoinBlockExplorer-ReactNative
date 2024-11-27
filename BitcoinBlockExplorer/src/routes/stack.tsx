@@ -6,12 +6,21 @@ import Home from "../screens/Home";
 import { NavigationContainer, RouteProp } from "@react-navigation/native";
 import EachBlock from "../screens/EachBlock";
 import EachTransaction from "../screens/EachTransaction";
+import Colors from "../components/Colors";
 
 const Stack = createNativeStackNavigator();
 
 type StackNavigation = {
   Home: undefined;
-  EachBlock: { hashBlock: string, height: number, date: number, size: number, medianFee: number, miner: string, numberTransactions: number };
+  EachBlock: {
+    hashBlock: string;
+    height: number;
+    date: number;
+    size: number;
+    medianFee: number;
+    miner: string;
+    numberTransactions: number;
+  };
   EachTransaction: { txId: string };
 };
 
@@ -24,23 +33,35 @@ export type StackTypes = NativeStackNavigationProp<StackNavigation>;
 export default function StackComponent() {
   return (
     <NavigationContainer>
-
       <Stack.Navigator>
         <Stack.Screen
-          options={{ headerShown: false }}
+          options={{
+            headerShown: false,
+            headerStyle: {
+              backgroundColor: Colors.background,
+            },
+          }}
           name="Home"
           component={Home}
         />
-        <Stack.Screen name="EachBlock" component={EachBlock} />
         <Stack.Screen
-        options={{
-          headerStyle: {
-            backgroundColor: '#fff',            
-          },
-          
-         }}
-        
-        name="EachTransaction" component={EachTransaction} />
+          options={{
+            headerStyle: {
+              backgroundColor: Colors.background,
+            },
+          }}
+          name="EachBlock"
+          component={EachBlock}
+        />
+        <Stack.Screen
+          options={{
+            headerStyle: {
+              backgroundColor: Colors.background,
+            },
+          }}
+          name="EachTransaction"
+          component={EachTransaction}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );

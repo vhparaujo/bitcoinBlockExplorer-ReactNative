@@ -17,6 +17,7 @@ import {
 import { RouteTypes } from "../../routes/stack";
 import { getTransactions } from "../../../services/EachTransactionRequest";
 import { randomNumber } from "../../components/Generals";
+import Colors from "../../components/Colors";
 
 const EachTransaction = () => {
   const route = useRoute<RouteTypes>();
@@ -93,7 +94,7 @@ export default EachTransaction;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
+    backgroundColor: Colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
