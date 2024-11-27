@@ -200,15 +200,15 @@ const Home = () => {
             </View>
           ))}
 
-          <Text style={{ paddingBottom: 10, color: Colors.cinza }}>Taxa de Transação</Text>
+          <Text style={{ paddingBottom: 10, color: Colors.cinza, fontSize: 18 }}>Taxa de Transação</Text>
           <View style={styles.horizontalPriorityContainer}>
-            <Text style={{ paddingRight: 10, fontSize: 11, color: Colors.cinza }}>
+            <Text style={{ paddingRight: 10, fontSize: 12, color: Colors.cinza }}>
               Baixa Prioridade
             </Text>
-            <Text style={{ paddingRight: 10, fontSize: 11, color: Colors.cinza }}>
+            <Text style={{ paddingRight: 10, fontSize: 12, color: Colors.cinza }}>
               Média Prioridade
             </Text>
-            <Text style={{ fontSize: 11, color: Colors.cinza }}>Alta Prioridade</Text>
+            <Text style={{ fontSize: 12, color: Colors.cinza }}>Alta Prioridade</Text>
           </View>
           {feeData.map((fee) => (
             <View
