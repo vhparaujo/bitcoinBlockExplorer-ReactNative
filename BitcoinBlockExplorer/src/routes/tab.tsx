@@ -6,7 +6,7 @@ import {
 import Home from "../screens/Home";
 import { NavigationContainer } from "@react-navigation/native";
 import SettingsScreen from "../screens/Settings";
-import EachBlock from "../screens/EachBlock";
+import Stack from "./stack";
 
 const Tab = createBottomTabNavigator();
 
@@ -21,8 +21,11 @@ export default function TabComponent() {
   return (
     <NavigationContainer>
       <Tab.Navigator>
-        <Tab.Screen name="Home" component={Home} />
-        <Tab.Screen name="Settings" component={SettingsScreen} />
+        <Tab.Screen
+        options={{ headerShown: false }}
+        name="Home" component={Stack} />
+        <Tab.Screen
+         name="Settings" component={SettingsScreen} />
       </Tab.Navigator>
     </NavigationContainer>
   );

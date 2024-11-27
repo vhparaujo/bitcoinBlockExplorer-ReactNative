@@ -23,16 +23,23 @@ export type StackTypes = NativeStackNavigationProp<StackNavigation>;
 
 export default function StackComponent() {
   return (
-    <NavigationContainer>
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
+          
           name="Home"
           component={Home}
         />
         <Stack.Screen name="EachBlock" component={EachBlock} />
-        <Stack.Screen name="EachTransaction" component={EachTransaction} />
+        <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: '#fff',            
+          },
+          
+         }}
+        
+        name="EachTransaction" component={EachTransaction} />
       </Stack.Navigator>
-    </NavigationContainer>
   );
 }
