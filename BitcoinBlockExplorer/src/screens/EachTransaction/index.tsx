@@ -45,7 +45,7 @@ const EachTransaction = () => {
 
   if (error) {
     console.error(error);
-    return <Text style={{ color: "red" }}>Error fetching data</Text>;
+    return <Text style={{fontSize: 20}}>Nenhuma transação encontrada</Text>;
   }
 
   return (
