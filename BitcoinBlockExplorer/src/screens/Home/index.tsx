@@ -36,9 +36,11 @@ import {
 } from "../../../services/CoinsRequest";
 import {
   calculateValuePerSatvB,
+  convertDateToHoursAndMinute,
   randomNumber,
 } from "../../components/Generals";
 import Colors from "../../components/Colors";
+import { convertDate } from "../../components/Generals";
 
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
@@ -120,7 +122,7 @@ const Home = () => {
     return console.log(feeError, blockHeaderError, transactionError);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
       {!isFocused ? (
         <View style={styles.horizontalContainer}>
           <Text style={styles.title}>Bitcoin Block Explorer</Text>
@@ -188,6 +190,12 @@ const Home = () => {
             >
               <Text style={{ fontSize: 24, fontWeight: "bold", color: Colors.laranja }}>
                 $ {coin.USD}
+              </Text>
+              <Text style={{ transform: [
+                {translateY: -5,},
+                {rotate: '180deg',}
+              ] ,marginLeft: 5, fontSize: 20, color: "green" }}>
+                ^
               </Text>
             </View>
           ))}
@@ -304,7 +312,7 @@ const Home = () => {
                   <Text style={{ fontSize: 13, color: Colors.cinza }}>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
                   <Text style={{ fontSize: 13, color: Colors.cinza }}>{(block.size / 1000000).toFixed(2)} MB</Text>
                   <Text style={{ fontSize: 13, color: Colors.cinza }}>{block.tx_count} transactions</Text>
-                  <Text style={{ fontSize: 13, color: Colors.cinza }}>{block.timestamp}</Text>
+                  <Text style={{ fontSize: 13, color: Colors.cinza }}>{convertDateToHoursAndMinute(block.timestamp)}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -325,7 +333,7 @@ const Home = () => {
 
             {transactionData.map((transaction) => (
               <TouchableOpacity
-                onPress={() => navigateToTransactionDetails(transaction.txid)}
+                onPress={() => navigateToTransactionDetails("4a8044c85e1a9e1e91f691c9dce71ede81be91a4419e65559fbfa8a4990ee21e")}
                 style={{
                   width: "90%",
                   padding: 20,
@@ -414,6 +422,7 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1,
     marginLeft: 18,
+    borderRadius: '50%',
   },
   searchImage: {
     position: "absolute",
