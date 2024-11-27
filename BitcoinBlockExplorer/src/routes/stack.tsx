@@ -23,10 +23,11 @@ export type StackTypes = NativeStackNavigationProp<StackNavigation>;
 
 export default function StackComponent() {
   return (
+    <NavigationContainer>
+
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
-          
           name="Home"
           component={Home}
         />
@@ -41,5 +42,6 @@ export default function StackComponent() {
         
         name="EachTransaction" component={EachTransaction} />
       </Stack.Navigator>
+    </NavigationContainer>
   );
 }
