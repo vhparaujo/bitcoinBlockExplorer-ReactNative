@@ -36,8 +36,10 @@ import {
 } from "../../../services/CoinsRequest";
 import {
   calculateValuePerSatvB,
+  convertDateToHoursAndMinute,
   randomNumber,
 } from "../../components/Generals";
+import { convertDate } from "../../components/Generals";
 
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
@@ -119,7 +121,7 @@ const Home = () => {
     return console.log(feeError, blockHeaderError, transactionError);
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={[styles.container]}>
       {!isFocused ? (
         <View style={styles.horizontalContainer}>
           <Text style={styles.title}>Bitcoin Explorer</Text>
@@ -187,8 +189,11 @@ const Home = () => {
               <Text style={{ fontSize: 30, fontWeight: "bold" }}>
                 $ {coin.USD}
               </Text>
-              <Text style={{ marginLeft: 5, fontSize: 15, color: "green" }}>
-                +2,5%
+              <Text style={{ transform: [
+                {translateY: -5,},
+                {rotate: '180deg',}
+              ] ,marginLeft: 5, fontSize: 20, color: "green" }}>
+                ^
               </Text>
             </View>
           ))}
@@ -299,7 +304,7 @@ const Home = () => {
                   <Text>~{Math.floor(block.extras.medianFee)} sat/vB</Text>
                   <Text>{(block.size / 1000000).toFixed(2)} MB</Text>
                   <Text>{block.tx_count} transactions</Text>
-                  <Text>{block.timestamp}</Text>
+                  <Text>{convertDateToHoursAndMinute(block.timestamp)}</Text>
                 </TouchableOpacity>
               ))}
             </View>
@@ -320,7 +325,7 @@ const Home = () => {
 
             {transactionData.map((transaction) => (
               <TouchableOpacity
-                onPress={() => navigateToTransactionDetails(transaction.txid)}
+                onPress={() => navigateToTransactionDetails("4a8044c85e1a9e1e91f691c9dce71ede81be91a4419e65559fbfa8a4990ee21e")}
                 style={{
                   width: "90%",
                   padding: 20,
@@ -409,6 +414,7 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1,
     marginLeft: 18,
+    borderRadius: '50%',
   },
   searchImage: {
     position: "absolute",
