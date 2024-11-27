@@ -5,6 +5,7 @@ import {
   StyleSheet,
   Text,
   View,
+  Image,
 } from "react-native";
 import { useRoute } from "@react-navigation/native";
 import { useCallback, useState, useEffect } from "react";
@@ -17,7 +18,7 @@ import {
 import { RouteTypes } from "../../routes/stack";
 import { getTransactions } from "../../../services/EachTransactionRequest";
 import { randomNumber } from "../../components/Generals";
-import Colors from "../../components/Colors";
+import { convertDate } from "../../components/Generals";
 
 const EachTransaction = () => {
   const route = useRoute<RouteTypes>();
@@ -53,35 +54,119 @@ const EachTransaction = () => {
     <ScrollView>
       <View style={styles.container}>
         {data.map((transaction) => (
-          <View key={transaction.txid}>
-            <Text>Transaction: {transaction.txid}</Text>
-            <Text>Date: {transaction.status.block_time}</Text>
-            <Text>Size: {transaction.size}</Text>
-            <Text>Fee: {transaction.fee}</Text>
+          <View style={{ width: "100%" }} key={transaction.txid}>
+            {/* Id da transação */}
+            <View
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "row",
+                padding: 15,
+                borderRadius: 15,
+                backgroundColor: "lightgray",
+                marginHorizontal: 12,
+                marginTop: 20,
+              }}
+            >
+              <Text>Transaction: </Text>
+              <Text numberOfLines={1} style={{ width: "50%" }}>
+                {transaction.txid}
+              </Text>
+            </View>
 
-            {/* entradas, lado esquerdo antes da seta no app oficial */}
-            {transaction.vin.map((vin) => (
-              <View key={randomNumber()}>
-                <Text style={{ color: "blue" }}>
-                  {vin.prevout?.scriptpubkey_address}
-                </Text>
-                <Text style={{ color: "red" }}>
-                  {(vin.prevout?.value ?? 0) / 100000000}
-                </Text>
+            {/*  */}
+            <View
+              style={{
+                justifyContent: "space-between",
+                flexDirection: "column",
+                borderRadius: 15,
+                backgroundColor: "lightgray",
+                marginHorizontal: 12,
+                marginTop: 20,
+              }}
+            >
+              <View
+                style={{
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  padding: 15,
+                }}
+              >
+                <Text>Date/Hora:</Text>
+                <Text>{(transaction.status.block_time == null) ? "Aguardando Confirmação": convertDate(transaction.status.block_time)}</Text>
               </View>
-            ))}
+              <View style={{ height: "0.2%", backgroundColor: "gray" }}></View>
+              <View
+                style={{
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  padding: 15,
+                }}
+              >
+                <Text>Size:</Text>
+                <Text>{transaction.size} B</Text>
+              </View>
+              <View style={{ height: "0.2%", backgroundColor: "gray" }}></View>
+              <View
+                style={{
+                  justifyContent: "space-between",
+                  flexDirection: "row",
+                  padding: 15,
+                }}
+              >
+                <Text>Fee:</Text>
+                <Text>{transaction.fee / 100000000} BTC</Text>
+              </View>
+            </View>
 
-            {/* saidas, lado direito depois da seta no app oficial */}
-            {transaction.vout.map((vout) => (
-              <View key={randomNumber()}>
-                <Text style={{ color: "green" }}>
-                  {vout.scriptpubkey_address}
-                </Text>
-                <Text style={{ color: "orange" }}>
-                  {(vout.value ?? 0) / 100000000}
-                </Text>
+            <Text 
+              style={{
+                marginHorizontal: 12,
+                marginTop: 20,
+              }}
+            >Entradas e saídas</Text>
+
+            <View
+              style={{
+                justifyContent: "space-between",
+                alignItems: "center",
+                flexDirection: "row",
+                padding: 15,
+                borderRadius: 15,
+                backgroundColor: "purple",
+                marginHorizontal: 12,
+                marginTop: 10,
+              }}
+            >
+              <View>
+              {/* entradas, lado esquerdo antes da seta no app oficial */}
+              {transaction.vin.map((vin) => (
+                <View style={{}} key={randomNumber()}>
+                  <Text numberOfLines={1} style={{ width: 100, color: "white" }}>
+                    {vin.prevout?.scriptpubkey_address}
+                  </Text>
+                  <Text style={{ width: 100 ,color: "white" }}>
+                    {(vin.prevout?.value ?? 0) / 100000000}
+                  </Text>
+                </View>
+              ))}
               </View>
-            ))}
+
+              <Image source={require("../../../assets/arrow.png")} />
+
+              {/* saidas, lado direito depois da seta no app oficial */}
+              <View style={{width: '33%'}}>
+              {transaction.vout.map((vout) => (
+                <View key={randomNumber()}>
+                  <Text numberOfLines={1} style={{ color: "white" }}>
+                    {vout.scriptpubkey_address}
+                  </Text>
+                  <Text style={{ color: "white" }}>
+                    {(vout.value ?? 0) / 100000000}
+                  </Text>
+                </View>
+              ))}
+              </View>
+            </View>
           </View>
         ))}
       </View>
@@ -94,7 +179,6 @@ export default EachTransaction;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
