@@ -26,7 +26,6 @@ export default function StackComponent() {
       <Stack.Navigator>
         <Stack.Screen
           options={{ headerShown: false }}
-          
           name="Home"
           component={Home}
         />
