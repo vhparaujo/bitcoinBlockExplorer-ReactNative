@@ -230,7 +230,7 @@ const Home = () => {
           {allCoins.map((coin) => (
             <View
               style={{
-                flexDirection: "colunm",
+                flexDirection: "column",
                 justifyContent: "center",
                 alignItems: "center",
                 width: 100,
