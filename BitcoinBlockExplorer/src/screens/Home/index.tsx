@@ -587,7 +587,6 @@ const styles = StyleSheet.create({
     height: undefined,
     aspectRatio: 1,
     marginLeft: 18,
-    borderRadius: "50%",
   },
   searchImage: {
     position: "absolute",
