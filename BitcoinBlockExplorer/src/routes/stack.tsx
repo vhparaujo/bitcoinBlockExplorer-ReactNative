@@ -8,6 +8,7 @@ import EachBlock from "../screens/EachBlock";
 import EachTransaction from "../screens/EachTransaction";
 import Colors from "../components/Colors";
 
+
 const Stack = createNativeStackNavigator();
 
 type StackNavigation = {
@@ -39,13 +40,17 @@ export default function StackComponent() {
             headerShown: false,
             headerStyle: {
               backgroundColor: Colors.background,
+              
             },
+            headerTintColor: Colors.laranja
           }}
           name="Home"
           component={Home}
         />
+        
         <Stack.Screen
           options={{
+            title: "Bloco",
             headerStyle: {
               backgroundColor: Colors.background,
             },
@@ -53,12 +58,14 @@ export default function StackComponent() {
               fontSize: 20,
               color: Colors.cinza,
              },
+             headerTintColor: Colors.laranja
           }}
           name="EachBlock"
           component={EachBlock}
         />
         <Stack.Screen
           options={{
+            title: "Transação",
             headerStyle: {
               backgroundColor: Colors.background,
             },
@@ -66,6 +73,7 @@ export default function StackComponent() {
               fontSize: 20,
               color: Colors.cinza,
              },
+             headerTintColor: Colors.laranja
           }}
           name="EachTransaction"
           component={EachTransaction}

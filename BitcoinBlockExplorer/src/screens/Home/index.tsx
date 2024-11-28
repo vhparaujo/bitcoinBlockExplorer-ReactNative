@@ -1,5 +1,4 @@
 import {
-  Button,
   RefreshControl,
   ScrollView,
   StyleSheet,
@@ -9,8 +8,8 @@ import {
   TextInput,
   Image,
   TouchableOpacity,
-  Animated,
   Keyboard,
+  StatusBar
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { SafeAreaView } from "react-native-safe-area-context";
@@ -37,13 +36,12 @@ import {
 import {
   calculateValuePerSatvB,
   convertDateToHoursAndMinute,
+  formatCurrency,
   randomNumber,
 } from "../../components/Generals";
 import Colors from "../../components/Colors";
-import { convertDate } from "../../components/Generals";
-import RNPickerSelect from "react-native-picker-select";
-import { Picker } from "@react-native-picker/picker";
 import DropDownPicker from "react-native-dropdown-picker";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Home = () => {
   const navigation = useNavigation<StackTypes>();
@@ -86,7 +84,32 @@ const Home = () => {
   const [open, setOpen] = useState(false);
   const [items, setItems] = useState<{ label: string; value: string }[]>([]);
 
-  const getAllCoins = () => {
+  async function setNewCoin(coin: string) {
+    try {
+      const newCoin = coin;
+      await AsyncStorage.setItem("moedaEscolhida", JSON.stringify(newCoin));
+      console.log("Moeda escolhida salva com sucesso");
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getStorageCoin() {
+    try {
+      await AsyncStorage.getItem("moedaEscolhida").then((value) => {
+        if (value !== null) {
+          setSelectedCoin(JSON.parse(value));
+        }
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const getAllCoins = async () => {
+    if (selectedCoin === null) {
+      getStorageCoin();
+    }
 
     const updatedCoins = coins.map((coin, index) => ({
       USD: coin.USD,
@@ -101,19 +124,22 @@ const Home = () => {
     }));
     setCoins(updatedCoins);
 
-    const firstCoin = updatedCoins[0] || {}; 
+    const firstCoin = updatedCoins[0] || {};
     const dropDownItems = Object.keys(firstCoin as Coins).map((key) => ({
       label: key,
-      value: String(firstCoin[key as keyof Coins]), 
+      value: String(firstCoin[key as keyof Coins]),
     }));
 
     setItems(dropDownItems);
-    
   };
 
   useEffect(() => {
-    getAllCoins();
-  }, []);
+    if (coins.length && coins2.length) {
+      getAllCoins(); // Chama novamente quando os dados estiverem prontos
+    }
+  }, [coins, coins2]);
+
+  useEffect(() => {}, [selectedCoin]);
 
   const {
     data: transactionData,
@@ -151,6 +177,12 @@ const Home = () => {
       miner,
       numberTransactions,
     });
+  };
+
+  const selectedCountry = () => {
+    const l = items.find((item) => item.value === selectedCoin);
+    console.log(l?.label);
+    return l?.label ?? "BRL";
   };
 
   const navigateToTransactionDetails = (txId: string) => {
@@ -217,6 +249,8 @@ const Home = () => {
         style={{ width: "100%" }}
         nestedScrollEnabled={true}
       >
+        
+
         <View
           style={{
             alignItems: "center",
@@ -228,6 +262,10 @@ const Home = () => {
             Preço do Bitcoin
           </Text>
 
+          <Text style={styles.title}>
+            {formatCurrency(Number(selectedCoin), selectedCountry())}
+          </Text>
+
           {allCoins.map((coin) => (
             <View
               style={{
@@ -236,28 +274,52 @@ const Home = () => {
                 alignItems: "center",
                 width: 100,
                 marginBottom: 20,
+                marginTop: 10,
               }}
               key={coin.USD}
             >
-
-             {selectedCoin && (
-                <Text style={styles.title}>
-                  {selectedCoin}
-                </Text>
-              )}
-
               <DropDownPicker
                 open={open}
                 value={selectedCoin}
                 items={items}
                 setOpen={setOpen}
-                setValue={setSelectedCoin}
+                setValue={(callback) => {
+                  const newValue = callback(selectedCoin);
+                  const selectedItem = items.find(
+                    (item) => item.value === newValue
+                  );
+                  setNewCoin(newValue);
+                  setSelectedCoin(newValue);
+                  console.log(items);
+                }}
                 setItems={setItems}
                 placeholder=""
-                style={styles.dropdown}
                 listMode="SCROLLVIEW"
+                dropDownContainerStyle={{
+                  backgroundColor: Colors.backgroundBoxes,
+                  opacity: 0.95,
+                  width: 100,
+                }}
+                textStyle={{
+                  color: Colors.cinza,
+                }}
+                selectedItemContainerStyle={{
+                  backgroundColor: Colors.laranja,
+                }}
+                selectedItemLabelStyle={{
+                  color: Colors.background,
+                }}
+                arrowIconStyle={{
+                  tintColor: Colors.laranja,
+                }}
+                placeholderStyle={{
+                  color: Colors.cinza,
+                }}
+                style={{
+                  backgroundColor: Colors.backgroundBoxes,
+                  borderColor: Colors.backgroundBoxes,
+                }}
               />
-
             </View>
           ))}
 
@@ -429,11 +491,7 @@ const Home = () => {
 
             {transactionData.map((transaction) => (
               <TouchableOpacity
-                onPress={() =>
-                  navigateToTransactionDetails(
-                    "4a8044c85e1a9e1e91f691c9dce71ede81be91a4419e65559fbfa8a4990ee21e"
-                  )
-                }
+                onPress={() => navigateToTransactionDetails(transaction.txid)}
                 style={{
                   width: "90%",
                   padding: 20,
@@ -569,10 +627,10 @@ const styles = StyleSheet.create({
   },
   dropdown: {
     width: 100,
-    borderColor: '#ddd',
+    borderColor: "#ddd",
     borderWidth: 1,
     borderRadius: 10,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   // dropdownContainer: {
   //   width: 100,
@@ -581,6 +639,6 @@ const styles = StyleSheet.create({
   selectedCoin: {
     marginTop: 20,
     fontSize: 16,
-    color: '#333',
+    color: "#333",
   },
 });

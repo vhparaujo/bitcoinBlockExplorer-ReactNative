@@ -1,12 +1,6 @@
-import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  Image,
-  View,
-} from "react-native";
+import { ScrollView, StyleSheet, Text, Image, View } from "react-native";
 import { useRoute } from "@react-navigation/native";
-import {  useEffect } from "react";
+import { useEffect } from "react";
 import { useFetchData } from "../../../hooks/hooks";
 import LoadingView from "../../components/Loading";
 import {
@@ -15,6 +9,7 @@ import {
 } from "../../../services/TransactionsBlockRequest";
 import { RouteTypes } from "../../routes/stack";
 import { convertDate, randomNumber } from "../../components/Generals";
+import Colors from "../../components/Colors";
 
 const EachBlock = () => {
   const route = useRoute<RouteTypes>();
@@ -54,41 +49,59 @@ const EachBlock = () => {
   }
 
   return (
-    <ScrollView>
+    <ScrollView style={{ backgroundColor: Colors.background }}>
       <View style={styles.container}>
         <View>
           <Text
             style={{
               padding: 15,
               borderRadius: 12,
-              backgroundColor: "lightgray",
+              backgroundColor: Colors.backgroundBoxes,
               marginHorizontal: 12,
               marginTop: 20,
+              color: "white",
             }}
           >
             Block: {height}
           </Text>
         </View>
 
-        <Text
+        <View
           style={{
             padding: 15,
             borderRadius: 12,
-            backgroundColor: "lightgray",
+            backgroundColor: Colors.backgroundBoxes,
             marginHorizontal: 12,
             marginTop: 20,
+            flexDirection: "row",
+            justifyContent: "space-between",
+            width: "94%",
           }}
-          numberOfLines={1}
         >
-          Hash: {hashBlock}
-        </Text>
+          <Text
+            style={{
+              color: "white",
+            }}
+            numberOfLines={1}
+            
+          >
+            Hash: 
+          </Text>
+          <Text
+            style={{
+              color: Colors.laranja,
+              width: "65%",
+            }}
+            numberOfLines={1}
+          >{hashBlock}</Text>
+        </View>
 
         <View
           style={{
             justifyContent: "space-between",
             flexDirection: "column",
             borderRadius: 15,
-            backgroundColor: "lightgray",
+            backgroundColor: Colors.backgroundBoxes,
             marginHorizontal: 12,
             marginTop: 20,
           }}
@@ -101,8 +114,8 @@ const EachBlock = () => {
               width: "100%",
             }}
           >
-            <Text>Date:</Text>
-            <Text>{convertDate(date)}</Text>
+            <Text style={{color: 'white'}}>Date:</Text>
+            <Text style={{color: Colors.laranja}}>{convertDate(date)}</Text>
           </View>
 
           <View
@@ -113,8 +126,8 @@ const EachBlock = () => {
               width: "100%",
             }}
           >
-            <Text>Size:</Text>
-            <Text>{(size / 1000000).toFixed(2)} MB</Text>
+            <Text style={{color: 'white'}}>Size:</Text>
+            <Text style={{color: Colors.laranja}}>{(size / 1000000).toFixed(2)} MB</Text>
           </View>
 
           <View
@@ -125,8 +138,8 @@ const EachBlock = () => {
               width: "100%",
             }}
           >
-            <Text>Median Fee:</Text>
-            <Text>~{medianFee.toFixed(2)} sat/vB</Text>
+            <Text style={{color: 'white'}}>Median Fee:</Text>
+            <Text style={{color: Colors.laranja}}>~{medianFee.toFixed(2)} sat/vB</Text>
           </View>
 
           <View
@@ -137,15 +150,17 @@ const EachBlock = () => {
               width: "100%",
             }}
           >
-            <Text>Miner:</Text>
-            <Text>{miner}</Text>
+            <Text style={{color: 'white'}}>Miner:</Text>
+            <Text style={{color: Colors.laranja}}>{miner}</Text>
           </View>
         </View>
 
         <Text
           style={{
-            marginHorizontal: 12,
-            marginTop: 20,
+            marginHorizontal: 14,
+            marginTop: 25,
+            color: "white",
+            fontSize: 18,
           }}
         >
           {numberTransactions} transactions
@@ -154,7 +169,7 @@ const EachBlock = () => {
         <View
           style={{
             width: "100%",
-            marginTop: 20,
+            marginTop: 25,
           }}
         >
           {data.map((transactionsBlock) => (
@@ -163,7 +178,7 @@ const EachBlock = () => {
                 style={{
                   padding: 15,
                   borderRadius: 12,
-                  backgroundColor: "lightgray",
+                  backgroundColor: Colors.backgroundBoxes,
                   marginHorizontal: 12,
                   flexDirection: "row",
                   justifyContent: "space-between",
@@ -171,14 +186,16 @@ const EachBlock = () => {
               >
                 <Text
                   style={{
-                    color: "blue",
+                    color: Colors.laranja,
                     width: "55%",
                   }}
                   numberOfLines={1}
                 >
                   {transactionsBlock.txid}
                 </Text>
-                <Text>
+                <Text style={{
+                  color: 'gray',
+                }}>
                   {transactionsBlock.status.block_time == null
                     ? "Aguardando Confirmação"
                     : convertDate(transactionsBlock.status.block_time)}
@@ -192,7 +209,7 @@ const EachBlock = () => {
                   flexDirection: "row",
                   padding: 15,
                   borderRadius: 15,
-                  backgroundColor: "purple",
+                  backgroundColor: Colors.backgroundBoxes,
                   marginHorizontal: 12,
                   marginTop: 10,
                   marginBottom: 10,
@@ -204,7 +221,7 @@ const EachBlock = () => {
                     <View key={randomNumber()}>
                       <Text
                         numberOfLines={1}
-                        style={{ width: 100, color: "white" }}
+                        style={{ width: 100, color: Colors.laranja }}
                       >
                         {vin.prevout?.scriptpubkey_address}
                       </Text>
@@ -226,7 +243,7 @@ const EachBlock = () => {
                     <View key={randomNumber()}>
                       <Text
                         numberOfLines={1}
-                        style={{ width: 100, color: "white" }}
+                        style={{ width: 100, color: Colors.laranja }}
                       >
                         {vout.scriptpubkey_address}
                       </Text>
@@ -253,7 +270,6 @@ export default EachBlock;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "flex-start",
     justifyContent: "center",
   },

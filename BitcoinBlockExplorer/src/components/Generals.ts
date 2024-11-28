@@ -18,3 +18,10 @@ export const convertDateToHoursAndMinute = (date: number): string => {
   const minutes = convertedDate.getMinutes().toString().padStart(2, '0'); // Garante dois dígitos
   return `${hours}:${minutes}`; // Retorna somente a hora no formato HH:mm
 };
+
+export const formatCurrency = (amount: number, currency: string = 'USD') => {
+  return new Intl.NumberFormat("pt-BR", {  // Para português do Brasil
+    style: "currency",
+    currency: currency,
+  }).format(amount);
+};
