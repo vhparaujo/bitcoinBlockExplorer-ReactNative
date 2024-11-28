@@ -215,6 +215,7 @@ const Home = () => {
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
         style={{ width: "100%" }}
+        nestedScrollEnabled={true}
       >
         <View
           style={{
@@ -254,6 +255,7 @@ const Home = () => {
                 setItems={setItems}
                 placeholder=""
                 style={styles.dropdown}
+                listMode="SCROLLVIEW"
               />
 
             </View>
